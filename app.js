@@ -2,14 +2,14 @@
 
 var budgetController = (function() {
     
-    var Expense(id, desc, value){
+    var Expense = function(id, desc, value){
         this.id = id;
         this.desc = desc;
         this.value = value;
         
     };
     
-    var Income(id, desc, value){
+    var Income = function(id, desc, value){
         this.id = id;
         this.desc = desc;
         this.value = value;
@@ -25,7 +25,37 @@ var budgetController = (function() {
             exp : 0,
             inc : 0
         }
+    };
+    
+    return {
+        addItem : function(type, desc, val){
+            
+            var newItem, ID;
+            
+            
+            if(data.allItems[type].length > 0){
+                ID = data.allItems[type][data.allItems[type].length - 1].id + 1;
+
+            } else {
+                ID = 0;
+            }
+            
+            if (type === 'exp'){ 
+                newItem = new Expense(data.allItems.exp[data.allItems.exp.length] + 1, desc, val);
+            } else if (type === 'inc'){
+                newItem = new Income(data.allItems.inc[data.allItems.inc.length] + 1, desc, val);
+            }
+            
+            data.allItems[type].push(newItem);
+            return newItem;
+        },
+        
+        testing: function(){
+            console.log(data);
+        }
     }
+    
+    
     
 })();
 
@@ -40,11 +70,13 @@ var UIController = (function(){
         inputType : '.add__type',
         desc : '.add__description',
         value : '.add__value',
-        addInput : '.add__btn'
+        addInput : '.add__btn',
+        incomeContainer : '.income__list',
+        expenseContainer : '.expenses__list',
     }
     
     return {
-        getinput : function(){
+        getInput : function(){
             return {
                 type : document.querySelector(DOMstrings.inputType).value,                    //whether income or expense
                 description : document.querySelector(DOMstrings.desc).value,                 // identifier
@@ -54,6 +86,37 @@ var UIController = (function(){
         
         getDOMstrings : function(){
             return DOMstrings;
+        },
+        
+        addListItem : function (obj, type){
+            var html, element;
+            
+            //create HTML string w/ placeholder
+            
+            if(type === 'inc'){
+                
+                element = DOMstrings.incomeContainer;
+
+                html = '<div class="item clearfix" id="income-%id%"><div class="item__description">%description%</div><div class="right clearfix"><div class="item__value">%value%</div><div class="item__delete"><button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button></div></div></div>'
+            } else if (type === 'exp'){
+                
+                element = DOMstrings.expenseContainer;
+            
+                html = '<div class="item clearfix" id="expense-%id%"><div class="item__description">%description%</div><div class="right clearfix"><div class="item__value">%value%</div><div class="item__percentage">21%</div><div class="item__delete"><button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button></div></div></div>'
+                
+            }
+            
+            // replace placeholder
+            
+            newHtml = html.replace('%id%', obj.id);
+            newHtml = newHtml.replace('%description%', obj.desc);
+            newHtml = newHtml.replace('%value%', obj.value);
+            
+            //insert HTML into DOM
+            
+            document.querySelector(element).insertAdjacentHTML('beforeend', newHtml);
+        
+            
         }
     }
     
@@ -85,23 +148,31 @@ var controller = (function(budgetCtrl, UICtrl){
     //controls adding item
     var addItem= function(){
         
-        
-         // get data from  input field
-        
-        var input = UICtrl.getinput();
-        console.log(input);
+        var input, newItem;
         
         
-        // update budget controller w/ item
+         // 1) get data from  input field
         
         
-        // update UI w/ item
+        input = UICtrl.getInput();
         
         
-        // calculate new budget
+        
+        // 2) update budget controller w/ item
         
         
-        // update UI with new budget
+        newItem = budgetCtrl.addItem(input.type, input.description, input.value);
+        
+        
+        // 3) update UI w/ item
+        
+        UICtrl.addListItem(newItem, input.type);
+        
+        
+        // 4) calculate new budget
+        
+        
+        // 5) update UI with new budget
     }
     
     return {
