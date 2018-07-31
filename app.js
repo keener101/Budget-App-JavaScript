@@ -11,6 +11,8 @@ var budgetController = (function() {
 
 var UIController = (function(){
     
+    
+    
     var DOMstrings = {
         inputType : '.add__type',
         desc : '.add__description',
@@ -38,7 +40,23 @@ var UIController = (function(){
 
 var controller = (function(budgetCtrl, UICtrl){
     
-    var DOM = UICtrl.getDOMstrings();
+  
+    
+    
+    var setupListeners = function(){
+        var DOM = UICtrl.getDOMstrings();
+
+        document.querySelector(DOM.addInput).addEventListener('click', addItem);
+        
+        document.addEventListener('keypress', function(event){
+
+         if(event.keycode === 13 || event.which === 13){
+                addItem();
+            }
+        
+        });
+
+    }
     
     
     //controls adding item
@@ -63,18 +81,13 @@ var controller = (function(budgetCtrl, UICtrl){
         // update UI with new budget
     }
     
-    //calls addItem() on button press
-    
-    document.querySelector(DOM.addInput).addEventListener('click', addItem);
-    
-    //calls addItem() on Enter Key press
-    
-    document.addEventListener('keypress', function(event){
-        
-        if(event.keycode === 13 || event.which === 13){
-            addItem();
+    return {
+        init: function(){
+            setupListeners();
         }
-        
-    });
+    } 
+     
     
 })(budgetController, UIController);
+
+controller.init(); 
