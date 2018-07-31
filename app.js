@@ -11,7 +11,26 @@ var budgetController = (function() {
 
 var UIController = (function(){
     
-    //add UI module here
+    var DOMstrings = {
+        inputType : '.add__type',
+        desc : '.add__description',
+        value : '.add__value',
+        addInput : '.add__btn'
+    }
+    
+    return {
+        getinput : function(){
+            return {
+                type : document.querySelector(DOMstrings.inputType).value,                    //whether income or expense
+                description : document.querySelector(DOMstrings.desc).value,                 // identifier
+                value : document.querySelector(DOMstrings.value).value                        // amount
+            }
+        },
+        
+        getDOMstrings : function(){
+            return DOMstrings;
+        }
+    }
     
 })();
 
@@ -19,12 +38,17 @@ var UIController = (function(){
 
 var controller = (function(budgetCtrl, UICtrl){
     
+    var DOM = UICtrl.getDOMstrings();
+    
     
     //controls adding item
     var addItem= function(){
         
-        console.log('ding');
+        
          // get data from  input field
+        
+        var input = UICtrl.getinput();
+        console.log(input);
         
         
         // update budget controller w/ item
@@ -41,9 +65,9 @@ var controller = (function(budgetCtrl, UICtrl){
     
     //calls addItem() on button press
     
-    document.querySelector('.add__btn').addEventListener('click', addItem);
+    document.querySelector(DOM.addInput).addEventListener('click', addItem);
     
-    
+    //calls addItem() on Enter Key press
     
     document.addEventListener('keypress', function(event){
         
