@@ -2,7 +2,30 @@
 
 var budgetController = (function() {
     
-    //add budget module here
+    var Expense(id, desc, value){
+        this.id = id;
+        this.desc = desc;
+        this.value = value;
+        
+    };
+    
+    var Income(id, desc, value){
+        this.id = id;
+        this.desc = desc;
+        this.value = value;
+    };
+
+    var data = {
+        allItems : {
+            exp : [],
+            inc : []
+        } ,    
+    
+        totals : {
+            exp : 0,
+            inc : 0
+        }
+    }
     
 })();
 
