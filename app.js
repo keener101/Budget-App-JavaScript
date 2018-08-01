@@ -34,8 +34,13 @@ var budgetController = (function() {
     var calcTotal = function(type){
         var sum = 0;
         
-        data.allItems[type].forEach(function(val){
-            sum = sum + val;
+        data.allItems[type].forEach(function(cur){
+            console.log(sum);
+          
+
+            sum = sum + cur.value;
+            console.log(sum);
+
         });
         
         data.totals[type] = sum;
@@ -67,11 +72,14 @@ var budgetController = (function() {
         
         testing: function(){
             console.log(data);
+    
         },
         
         calcBudget : function(){
             calcTotal('inc');
+            console.log(data.totals);
             calcTotal('exp');
+            console.log(data.totals);
                       
             data.budget = data.totals.inc - data.totals.exp;
                       
@@ -91,6 +99,16 @@ var budgetController = (function() {
     
     
 })();
+
+
+
+
+
+
+
+
+
+
 
 
 // UI HANDLING
@@ -169,6 +187,16 @@ var UIController = (function(){
     }
     
 })();
+
+
+
+
+
+
+
+
+
+
 
 //GLOBAL CONTROLLER
 
