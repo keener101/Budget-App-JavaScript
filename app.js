@@ -183,7 +183,20 @@ var UIController = (function(){
         containers: '.container',
         expensePercentLabel : '.item__percentage'
         
-    }
+    };
+    
+    var formatNumber = function(number, type){
+        
+            
+            number = Math.abs(number).toFixed(2);
+            
+            number = number.replace(/\B(?=(\d{3})+(?!\d))/g, ",");   //regex to add commas every 3 places
+            
+            return type === 'inc' ? '+ ' + number : '- ' + number;
+            
+              
+            
+        };
     
     return {
         getInput : function(){
@@ -219,6 +232,8 @@ var UIController = (function(){
             return DOMstrings;
         },
         
+    
+        
         addListItem : function (obj, type){
             var html, element, newHtml;
             
@@ -243,7 +258,7 @@ var UIController = (function(){
             
             newHtml = html.replace('%id%', obj.id);
             newHtml = newHtml.replace('%description%', obj.desc);
-            newHtml = newHtml.replace('%value%', obj.value);
+            newHtml = newHtml.replace('%value%', formatNumber(obj.value, type));
             
             
             //insert HTML into DOM
@@ -277,10 +292,13 @@ var UIController = (function(){
         },
         
         displayBudget : function(obj){
+            var type;
             
-            document.querySelector(DOMstrings.budgetLabel).textContent = obj.budget;
-            document.querySelector(DOMstrings.incomeLabel).textContent = obj.incTotal
-            document.querySelector(DOMstrings.expenseLabel).textContent = obj.expTotal;
+            obj.budget >= 0 ? type = 'inc' : type = 'exp';
+            
+            document.querySelector(DOMstrings.budgetLabel).textContent = formatNumber(obj.budget, type);
+            document.querySelector(DOMstrings.incomeLabel).textContent = formatNumber(obj.incTotal, 'inc');
+            document.querySelector(DOMstrings.expenseLabel).textContent = formatNumber(obj.expTotal, 'exp');
 
             
             if(obj.per > 0){
